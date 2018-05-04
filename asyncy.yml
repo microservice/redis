@@ -1,0 +1,5 @@
+commands:
+  entrypoint:
+    help: Run redis_cli
+    additional_args: true
+    additional_kwargs: true
