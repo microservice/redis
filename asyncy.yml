@@ -3,3 +3,7 @@ commands:
     help: Run redis_cli
     additional_args: true
     additional_kwargs: true
+env:
+    REDIS_HOST:
+    REDIS_PORT:
+    REDIS_AUTH:
