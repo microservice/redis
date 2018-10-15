@@ -51,6 +51,10 @@ class Handler:
         self.r.set(json_req['key'], json_req['value'])
         return self.ok()
 
+    def get(self, command, json_req):
+        val = self.r.get(json_req['key'])
+        return self.ok(result=val, null=True)
+
     def push_generic(self, command, json_req):
         """
         Handles LPUSH, RPUSH.

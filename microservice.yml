@@ -55,6 +55,11 @@ commands:
     http:
       <<: *http
       path: /del
+  get:
+    <<: *key_required
+    http:
+      <<: *http
+      path: /get
   expire:
     http:
       <<: *http
