@@ -5,7 +5,7 @@ lifecycle:
 commands:
   set: &key_value_required
     http: &http
-      path: /
+      path: /set
       port: 8000
       method: post
       contentType: application/json
@@ -20,22 +20,41 @@ commands:
         required: true
   rpush:
     <<: *key_value_required
+    http:
+      <<: *http
+      path: /rpush
   lpush:
     <<: *key_value_required
+    http:
+      <<: *http
+      path: /lpush
   lpop: &key_required
     http:
       <<: *http
+      path: /lpop
     arguments:
       key:
         <<: *key
   rpop:
     <<: *key_required
+    http:
+      <<: *http
+      path: /rpop
   blpop:
     <<: *key_required
+    http:
+      <<: *http
+      path: /blpop
   brpop:
     <<: *key_required
+    http:
+      <<: *http
+      path: /brpop
   del:
     <<: *key_required
+    http:
+      <<: *http
+      path: /del
 environment:
   REDIS_HOST:
   REDIS_PORT:
