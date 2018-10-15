@@ -17,7 +17,7 @@ class Handler:
         db=os.getenv('REDIS_DB', None),
     )
 
-    pretty_commands = {
+    command_methods = {
         'del': 'delete',
         'rpop': 'pop_generic',
         'lpop': 'pop_generic',
@@ -27,10 +27,10 @@ class Handler:
         'lpush': 'push_generic',
     }
 
-    def execute(self):
+    def execute(self, command):
         req = request.get_json()
-        command = self.pretty_commands.get(req['command'], req['command'])
-        return getattr(self, command)(req)
+        method = self.command_methods.get(command, command)
+        return getattr(self, method)(command, req)
 
     def ok(self, result=None, null=False):
         res = {'status': 'ok'}
@@ -47,24 +47,24 @@ class Handler:
         resp.headers['Content-Type'] = 'application/json; charset=utf-8'
         return resp
 
-    def set(self, json_req):
-        self.r.set(json_req['data']['key'], json_req['data']['value'])
+    def set(self, command, json_req):
+        self.r.set(json_req['key'], json_req['value'])
         return self.ok()
 
-    def push_generic(self, json_req):
+    def push_generic(self, command, json_req):
         """
         Handles LPUSH, RPUSH.
         """
-        c = getattr(self.r, json_req['command'])
-        c(json_req['data']['key'], json_req['data']['value'])
+        c = getattr(self.r, command)
+        c(json_req['key'], json_req['value'])
         return self.ok()
 
-    def pop_generic(self, json_req):
+    def pop_generic(self, command, json_req):
         """
         Handles LPOP, RPOP, BLPOP, BRPOP.
         """
-        c = getattr(self.r, json_req['command'])
-        val = c(json_req['data']['key'])
+        c = getattr(self.r, command)
+        val = c(json_req['key'])
         if val:
             if isinstance(val, tuple):  # True if blocking pop.
                 return self.ok(val[1])
@@ -73,15 +73,15 @@ class Handler:
         else:
             return self.ok(null=True)
 
-    def delete(self, json_req):
+    def delete(self, command, json_req):
         """
         Pretty command - actual command is del.
         """
-        self.r.delete(json_req['data']['key'])
+        self.r.delete(json_req['key'])
         return self.ok()
 
 
 if __name__ == '__main__':
     handler = Handler()
-    handler.app.add_url_rule('/', 'execute', handler.execute, methods=['post'])
+    handler.app.add_url_rule('/<string:command>', 'execute', handler.execute, methods=['post'])
     handler.app.run(host='0.0.0.0', port=8000)
