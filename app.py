@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import os
 
 from flask import Flask, make_response, request
 
@@ -9,7 +10,12 @@ import redis
 class Handler:
     app = Flask(__name__)
 
-    r = redis.StrictRedis(host='localhost', port=6379)
+    r = redis.StrictRedis(
+        host=os.getenv('REDIS_HOST', 'localhost'),
+        port=int(os.getenv('REDIS_PORT', '6379')),
+        password=os.getenv('REDIS_PASSWORD', None),
+        db=os.getenv('REDIS_DB', None),
+    )
 
     pretty_commands = {
         'del': 'delete',

@@ -36,4 +36,8 @@ commands:
     <<: *key_required
   del:
     <<: *key_required
-    
+environment:
+  REDIS_HOST:
+  REDIS_PORT:
+  REDIS_DB:
+  REDIS_PASSWORD:
