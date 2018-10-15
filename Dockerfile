@@ -1,6 +1,8 @@
-FROM alpine:latest
+FROM        python:3.6-alpine
 
-RUN apk --update add redis
-ADD entrypoint.sh entrypoint.sh
+RUN         mkdir /app
+ADD         requirements.txt /app
+RUN         pip install -r /app/requirements.txt
+ADD         app.py /app
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT  ["python", "/app/app.py"]
