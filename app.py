@@ -80,8 +80,13 @@ class Handler:
         self.r.delete(json_req['key'])
         return self.ok()
 
+    def expire(self, command, json_req):
+        self.r.expire(json_req['key'], json_req['seconds'])
+        return self.ok()
+
 
 if __name__ == '__main__':
     handler = Handler()
-    handler.app.add_url_rule('/<string:command>', 'execute', handler.execute, methods=['post'])
+    handler.app.add_url_rule('/<string:command>', 'execute', handler.execute,
+                             methods=['post'])
     handler.app.run(host='0.0.0.0', port=8000)

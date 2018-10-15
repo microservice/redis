@@ -55,6 +55,18 @@ commands:
     http:
       <<: *http
       path: /del
+  expire:
+    http:
+      <<: *http
+      path: /expire
+    arguments:
+      key:
+        <<: *key
+      seconds:
+        in: requestBody
+        type: int
+        required: true
+
 environment:
   REDIS_HOST:
   REDIS_PORT:
