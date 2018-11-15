@@ -12,4 +12,9 @@ value = redis lpush key: 'hello' value: 'world1'
 value = redis rpush key: 'hello' value: 'world2'
 value = redis lpop key: 'hello'
 value = redis rpop key: 'hello'
+
+# Streaming example
+redis listener as rds
+  when rds rpop key: 'foo' as event  # Can also lpop.
+    # Do something with event...
 ```
