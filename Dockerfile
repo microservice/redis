@@ -3,6 +3,7 @@ FROM        python:3.6-alpine
 RUN         mkdir /app
 ADD         requirements.txt /app
 RUN         pip install -r /app/requirements.txt
-ADD         app.py /app
+ADD         start.sh /app
+ADD         omg /app/omg
 
-ENTRYPOINT  ["python", "/app/app.py"]
+ENTRYPOINT  ["/bin/sh", "/app/start.sh"]
