@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
 import os
+from typing import Dict
+
+from .RLPopThread import RLPopThread
 
 from flask import Flask, make_response, request
 
@@ -9,6 +12,8 @@ import redis
 
 class Handler:
     app = Flask(__name__)
+
+    listeners: Dict[str, RLPopThread] = {}
 
     r = redis.StrictRedis(
         host=os.getenv('REDIS_HOST', 'localhost'),
@@ -88,9 +93,42 @@ class Handler:
         self.r.expire(json_req['key'], json_req['seconds'])
         return self.ok()
 
+    def listener(self, action):
+        req = request.get_json()
+        sub_id = req['id']
+
+        if action == 'remove':
+            old_thread = self.listeners.get(sub_id)
+
+            if old_thread is not None:
+                old_thread.shutdown = True
+                return 'ok\n'
+
+            return 'already_inactive\n'
+
+        assert action == 'add'
+
+        # We only support r/lpop for now.
+        assert req['event'] == 'rpop' or req['event'] == 'lpop'
+
+        key = req['data']['key']
+
+        old_thread = self.listeners.get(sub_id)
+        if old_thread is not None:
+            if old_thread.is_alive():
+                return 'already_active\n'
+
+        t = RLPopThread(sub_id, req['event'], self.r, key, req['endpoint'])
+        t.start()
+        self.listeners[sub_id] = t
+        return 'ok\n'
+
 
 if __name__ == '__main__':
     handler = Handler()
+    handler.app.add_url_rule('/listener/<string:action>',
+                             # action=add/remove.
+                             'listener', handler.listener, methods=['post'])
     handler.app.add_url_rule('/<string:command>', 'execute', handler.execute,
                              methods=['post'])
     handler.app.run(host='0.0.0.0', port=8000)

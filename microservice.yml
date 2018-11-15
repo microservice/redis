@@ -1,7 +1,7 @@
 omg: 1
 lifecycle:
   startup:
-    command: ["python", "/app/app.py"]
+    command: ["/bin/sh", "/app/start.sh"]
 actions:
   set: &key_value_required
     http: &http
@@ -71,9 +71,41 @@ actions:
         in: requestBody
         type: int
         required: true
+  listener:
+    http:
+      port: 8000
+      subscribe:
+        path: /listener/add
+        method: post
+      unsubscribe:
+        path: /listener/remove
+        method: post
+    events:
+      rpop:
+        help: RPOP a key constantly, and emit the values as events
+        arguments:
+          key:
+            type: string
+            required: true
+            help: The key to RPOP
+        output:
+          type: any
+      lpop:
+        help: LPOP a key constantly, and emit the values as events
+        arguments:
+          key:
+            type: string
+            required: true
+            help: The key to LPOP
+        output:
+          type: any
 
 environment:
   REDIS_HOST:
+    type: string
   REDIS_PORT:
+    type: int
   REDIS_DB:
+    type: string
   REDIS_PASSWORD:
+    type: string
