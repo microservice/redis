@@ -72,17 +72,17 @@ actions:
         type: int
         required: true
   listener:
-    http:
-      port: 8000
-      subscribe:
-        path: /listener/add
-        method: post
-      unsubscribe:
-        path: /listener/remove
-        method: post
     events:
       rpop:
         help: RPOP a key constantly, and emit the values as events
+        http: &rpop_http
+          port: 8000
+          subscribe:
+            path: /listener/add
+            method: post
+          unsubscribe:
+            path: /listener/remove
+            method: post
         arguments:
           key:
             type: string
@@ -92,6 +92,8 @@ actions:
           type: any
       lpop:
         help: LPOP a key constantly, and emit the values as events
+        http:
+          <<: *rpop_http
         arguments:
           key:
             type: string
