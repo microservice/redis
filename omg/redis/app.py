@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
 import json
+import logging
 import os
+import signal
+import subprocess
+import threading
 from typing import Dict
-
-from .RLPopThread import RLPopThread
 
 from flask import Flask, make_response, request
 
 import redis
+
+from .RLPopThread import RLPopThread
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)-15s %(name)s %(levelname)s %(message)s')
+logger = logging.getLogger('app')
 
 
 class Handler:
@@ -124,7 +132,43 @@ class Handler:
         return 'ok\n'
 
 
+class RedisOnDemand:
+
+    def __init__(self, redis_proc: subprocess.Popen):
+        self.redis_proc = redis_proc
+
+    def wait(self):
+        self.redis_proc.wait()
+
+        logger.error('Redis has exited!')
+
+        # Print stdout for debug.
+        while True:
+            line = self.redis_proc.stdout.readline()
+            if line != b'':
+                logger.info(line.rstrip())
+            else:
+                break
+        # Exit as soon as the redis server crashes.
+        # Note: sys.exit() will not work here.
+        os.kill(os.getpid(), signal.SIGINT)
+
+
 if __name__ == '__main__':
+    # Do we have creds to connect to? If not, let's spawn a redis server
+    # at this point. Why do we spawn it here rather than outside? Because if
+    # redis dies, then we can exit this script so that the entire service dies.
+
+    if os.getenv('REDIS_HOST') is None:
+        logger.warning('Starting self hosted redis server...')
+        p = subprocess.Popen('/usr/bin/redis-server /app/redis.conf',
+                             stdout=subprocess.PIPE, shell=True)
+
+        server = RedisOnDemand(p)
+
+        t = threading.Thread(target=server.wait, daemon=True)
+        t.start()
+
     handler = Handler()
     handler.app.add_url_rule('/listener/<string:action>',
                              # action=add/remove.
