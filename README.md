@@ -1,4 +1,4 @@
-# redis for Asyncy
+# redis for Storyscript
 This container should be used for connecting to a hosted Redis server. It does not come bundled with its own Redis server.
 
 #### Example
