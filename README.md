@@ -79,6 +79,6 @@ $ omg subscribe listener lpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_P
 **Note**: The OMG CLI requires [Docker](https://docs.docker.com/install/) to be installed.
 
 ## License
-[MIT License](https://github.com/omg-services/awesome/blob/master/LICENSE).
+[MIT License](https://github.com/omg-services/redis/blob/master/LICENSE).
 
 
