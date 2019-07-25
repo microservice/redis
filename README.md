@@ -81,4 +81,3 @@ $ omg subscribe listener lpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_P
 ## License
 [MIT License](https://github.com/omg-services/redis/blob/master/LICENSE).
 
-
