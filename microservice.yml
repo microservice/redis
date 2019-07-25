@@ -1,7 +1,11 @@
 omg: 1
 lifecycle:
   startup:
-    command: ["/bin/sh", "/app/start.sh"]
+    command: ["/bin/sh", "/app/start.sh"] 
+info:
+  version: 1.0.0
+  title: Redis
+  description: This is a redis service
 volumes:
   db:
     target: /db
@@ -91,6 +95,7 @@ actions:
           key:
             type: string
             required: true
+            in: requestBody
             help: The key to RPOP
         output:
           type: any
@@ -102,6 +107,7 @@ actions:
           key:
             type: string
             required: true
+            in: requestBody
             help: The key to LPOP
         output:
           type: any
