@@ -26,6 +26,8 @@ actions:
         type: any
         in: requestBody
         required: true
+    output:
+      type: none
   rpush:
     <<: *key_value_required
     http:
@@ -43,31 +45,43 @@ actions:
     arguments:
       key:
         <<: *key
+    output:
+      type: any
   rpop:
     <<: *key_required
     http:
       <<: *http
       path: /rpop
+    output:
+      type: any
   blpop:
     <<: *key_required
     http:
       <<: *http
       path: /blpop
+    output:
+      type: any
   brpop:
     <<: *key_required
     http:
       <<: *http
       path: /brpop
+    output:
+      type: any
   del:
     <<: *key_required
     http:
       <<: *http
       path: /del
+    output:
+      type: none
   get:
     <<: *key_required
     http:
       <<: *http
       path: /get
+    output:
+      type: any
   expire:
     http:
       <<: *http
@@ -79,6 +93,8 @@ actions:
         in: requestBody
         type: int
         required: true
+    output:
+      type: none
   listener:
     events:
       rpop:
