@@ -10,6 +10,10 @@ volumes:
   db:
     target: /db
     persist: true
+health:
+  http:
+    path: /health
+    port: 8000
 actions:
   set: &key_value_required
     http: &http
