@@ -1,4 +1,4 @@
 #!/bin/sh
 
 cd /app
-python -m omg.redis.app
+exec python -m omg.redis.app
