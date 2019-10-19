@@ -86,6 +86,16 @@ actions:
       path: /get
     output:
       type: string
+  mget:
+    http:
+      <<: *http
+      path: /get
+    arguments:
+      keys:
+        in: requestBody
+        type: list
+    output:
+      type: lisy
   incr:
     http:
       <<: *http

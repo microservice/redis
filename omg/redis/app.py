@@ -46,10 +46,20 @@ class Handler:
         method = self.command_methods.get(command, command)
         return getattr(self, method)(command, req)
 
+    def decode(self, result):
+        if result is None:
+            return None
+
+        if isinstance(result, list):
+            return [self.decode(x) for x in result]
+
+        if isinstance(result, bytes):
+            return result.decode('utf-8')
+
+        return result
+
     def ok(self, result=None):
-        if result is not None:
-            if isinstance(result, bytes):
-                result = result.decode('utf-8')
+        result = self.decode(result)
         resp = make_response(json.dumps(result))
         resp.headers['Content-Type'] = 'application/json; charset=utf-8'
         return resp
@@ -72,6 +82,10 @@ class Handler:
 
     def get(self, command, json_req):
         val = self.r.get(json_req['key'])
+        return self.ok(result=val)
+
+    def mget(self, command, json_req):
+        val = self.r.mget(json_req['keys'])
         return self.ok(result=val)
 
     def incr(self, command, json_req):
