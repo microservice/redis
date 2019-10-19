@@ -1,7 +1,7 @@
 omg: 1
 lifecycle:
   startup:
-    command: ["/bin/sh", "/app/start.sh"] 
+    command: ["/bin/sh", "/app/start.sh"]
 info:
   version: 1.0.1
   title: Redis
@@ -16,6 +16,7 @@ health:
     port: 8000
 actions:
   set: &key_value_required
+    help: Sets 'key' to hold 'value'.
     http: &http
       path: /set
       port: 8000
@@ -34,15 +35,18 @@ actions:
       type: none
   rpush:
     <<: *key_value_required
+    help: Insert 'value' at the end of list stored at 'key'.
     http:
       <<: *http
       path: /rpush
   lpush:
     <<: *key_value_required
+    help: Insert 'value' at the head of list stored at 'key'.
     http:
       <<: *http
       path: /lpush
   lpop: &key_required
+    help: Removes and returns the first element of the list stored at 'key'.
     http:
       <<: *http
       path: /lpop
@@ -53,6 +57,7 @@ actions:
       type: any
   rpop:
     <<: *key_required
+    help: Removes and returns the last element of the list stored at 'key'.
     http:
       <<: *http
       path: /rpop
@@ -60,6 +65,10 @@ actions:
       type: any
   blpop:
     <<: *key_required
+    help: |
+      Removes and returns the first element of the list stored at 'key'.
+      When there are no element in the list, the command will not return
+      until an element got added.
     http:
       <<: *http
       path: /blpop
@@ -67,13 +76,18 @@ actions:
       type: any
   brpop:
     <<: *key_required
+    help: |
+      Removes and returns the last element of the list stored at 'key'.
+      When there are no element in the list, the command will not return
+      until an elements got added.
     http:
       <<: *http
       path: /brpop
     output:
       type: any
-  del:
+  delete:
     <<: *key_required
+    help: Removes 'key'.
     http:
       <<: *http
       path: /del
@@ -81,12 +95,14 @@ actions:
       type: none
   get:
     <<: *key_required
+    help: Returns the value of 'key'.
     http:
       <<: *http
       path: /get
     output:
       type: string
   mget:
+    help: Returns the values of multiple 'keys'.
     http:
       <<: *http
       path: /get
@@ -97,6 +113,7 @@ actions:
     output:
       type: lisy
   increment:
+    help: Increments a number stored at 'key'.
     http:
       <<: *http
       path: /incr
@@ -109,6 +126,7 @@ actions:
     output:
       type: string
   decrement:
+    help: Decrements a number stored at 'key'.
     http:
       <<: *http
       path: /decr
@@ -121,45 +139,34 @@ actions:
     output:
       type: string
   append:
+    <<: *key_value_required
+    help: Appends 'value' to a 'key'.
     http:
       <<: *http
       path: /append
-    arguments:
-      key:
-        <<: *key
-      value:
-        in: requestBody
-        type: any
     output:
       type: int
   getSet:
+    <<: *key_value_required
     http:
       <<: *http
       path: /getset
-    arguments:
-      key:
-        <<: *key
-      value:
-        in: requestBody
-        type: any
+    help: Returns the current value of 'key' and overwrites it with 'value'.
     output:
       type: string
   setnx:
+    <<: *key_value_required
     http:
       <<: *http
       path: /setnx
-    arguments:
-      key:
-        <<: *key
-      value:
-        in: requestBody
-        type: any
+    help: Set a 'key' to 'value' only if the key does not exist yet.
     output:
       type: boolean
   mset:
     http:
       <<: *http
       path: /mset
+    help: Sets multiple 'key'/'value' pairs simultaneously.
     arguments:
       pairs:
         in: requestBody
@@ -170,6 +177,9 @@ actions:
     http:
       <<: *http
       path: /msetnx
+    help: |
+      Sets multiple 'key'/'value' pairs simultaneously.
+      Only non-existing keys will be set.
     arguments:
       pairs:
         in: requestBody
@@ -180,6 +190,7 @@ actions:
     http:
       <<: *http
       path: /expire
+    help: Set a timeout on a 'key'.
     arguments:
       key:
         <<: *key
