@@ -67,6 +67,10 @@ class Handler:
         val = self.r.incr(json_req['key'], by)
         return self.ok(result=val)
 
+    def append(self, command, json_req):
+        val = self.r.append(json_req['key'], json_req['value'])
+        return self.ok(result=val)
+
     def push_generic(self, command, json_req):
         """
         Handles LPUSH, RPUSH.

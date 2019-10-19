@@ -98,6 +98,18 @@ actions:
         type: any
     output:
       type: any
+  append:
+    http:
+      <<: *http
+      path: /append
+    arguments:
+      key:
+        <<: *key
+      value:
+        in: requestBody
+        type: any
+    output:
+      type: int
   expire:
     http:
       <<: *http
