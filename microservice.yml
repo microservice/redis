@@ -85,7 +85,7 @@ actions:
       <<: *http
       path: /get
     output:
-      type: any
+      type: string
   incr:
     http:
       <<: *http
@@ -97,7 +97,7 @@ actions:
         in: requestBody
         type: any
     output:
-      type: any
+      type: string
   append:
     http:
       <<: *http
@@ -121,7 +121,7 @@ actions:
         in: requestBody
         type: any
     output:
-      type: any
+      type: string
   setnx:
     http:
       <<: *http
