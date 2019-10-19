@@ -110,6 +110,18 @@ actions:
         type: any
     output:
       type: int
+  getSet:
+    http:
+      <<: *http
+      path: /getset
+    arguments:
+      key:
+        <<: *key
+      value:
+        in: requestBody
+        type: any
+    output:
+      type: any
   expire:
     http:
       <<: *http
