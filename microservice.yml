@@ -134,6 +134,26 @@ actions:
         type: any
     output:
       type: boolean
+  mset:
+    http:
+      <<: *http
+      path: /mset
+    arguments:
+      pairs:
+        in: requestBody
+        type: map
+    output:
+      type: none
+  msetnx:
+    http:
+      <<: *http
+      path: /msetnx
+    arguments:
+      pairs:
+        in: requestBody
+        type: map
+    output:
+      type: boolean
   expire:
     http:
       <<: *http

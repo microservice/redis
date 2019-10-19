@@ -62,6 +62,14 @@ class Handler:
         val = self.r.setnx(json_req['key'], json_req['value'])
         return self.ok(result=val > 0)
 
+    def mset(self, command, json_req):
+        self.r.mset(json_req['pairs'])
+        return self.ok()
+
+    def msetnx(self, command, json_req):
+        val = self.r.msetnx(json_req['pairs'])
+        return self.ok(result=val > 0)
+
     def get(self, command, json_req):
         val = self.r.get(json_req['key'])
         return self.ok(result=val)
