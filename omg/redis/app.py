@@ -93,6 +93,11 @@ class Handler:
         val = self.r.incr(json_req['key'], by)
         return self.ok(result=val)
 
+    def decr(self, command, json_req):
+        by = json_req.get('by', 1)
+        val = self.r.decr(json_req['key'], by)
+        return self.ok(result=val)
+
     def append(self, command, json_req):
         val = self.r.append(json_req['key'], json_req['value'])
         return self.ok(result=val)

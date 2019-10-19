@@ -96,10 +96,22 @@ actions:
         type: list
     output:
       type: lisy
-  incr:
+  increment:
     http:
       <<: *http
       path: /incr
+    arguments:
+      key:
+        <<: *key
+      by:
+        in: requestBody
+        type: any
+    output:
+      type: string
+  decrement:
+    http:
+      <<: *http
+      path: /decr
     arguments:
       key:
         <<: *key
