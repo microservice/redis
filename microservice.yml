@@ -122,6 +122,18 @@ actions:
         type: any
     output:
       type: any
+  setnx:
+    http:
+      <<: *http
+      path: /setnx
+    arguments:
+      key:
+        <<: *key
+      value:
+        in: requestBody
+        type: any
+    output:
+      type: boolean
   expire:
     http:
       <<: *http
