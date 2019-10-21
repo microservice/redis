@@ -5,9 +5,10 @@ import os
 import signal
 import subprocess
 import threading
+import traceback
 from typing import Dict
 
-from flask import Flask, make_response, request
+from flask import Flask, jsonify, make_response, request
 
 import redis
 
@@ -37,7 +38,7 @@ class Handler:
         'brpop': 'pop_generic',
         'blpop': 'pop_generic',
         'rpush': 'push_generic',
-        'lpush': 'push_generic',
+        'lpush': 'push_generic'
     }
 
     def execute(self, command):
@@ -45,18 +46,21 @@ class Handler:
         method = self.command_methods.get(command, command)
         return getattr(self, method)(command, req)
 
-    def ok(self, result=None, null=False):
-        res = {'status': 'ok'}
+    def decode(self, result):
+        if result is None:
+            return None
 
-        if result is not None:
-            if isinstance(result, bytes):
-                result = result.decode('utf-8')
+        if isinstance(result, list):
+            return [self.decode(x) for x in result]
 
-            res['result'] = result
-        elif null:
-            res['result'] = None
+        if isinstance(result, bytes):
+            return result.decode('utf-8')
 
-        resp = make_response(json.dumps(res))
+        return result
+
+    def ok(self, result=None):
+        result = self.decode(result)
+        resp = make_response(json.dumps(result))
         resp.headers['Content-Type'] = 'application/json; charset=utf-8'
         return resp
 
@@ -64,9 +68,43 @@ class Handler:
         self.r.set(json_req['key'], json_req['value'])
         return self.ok()
 
+    def setnx(self, command, json_req):
+        val = self.r.setnx(json_req['key'], json_req['value'])
+        return self.ok(result=val > 0)
+
+    def mset(self, command, json_req):
+        self.r.mset(json_req['pairs'])
+        return self.ok()
+
+    def msetnx(self, command, json_req):
+        val = self.r.msetnx(json_req['pairs'])
+        return self.ok(result=val > 0)
+
     def get(self, command, json_req):
         val = self.r.get(json_req['key'])
-        return self.ok(result=val, null=True)
+        return self.ok(result=val)
+
+    def mget(self, command, json_req):
+        val = self.r.mget(json_req['keys'])
+        return self.ok(result=val)
+
+    def incr(self, command, json_req):
+        by = json_req.get('by', 1)
+        val = self.r.incr(json_req['key'], by)
+        return self.ok(result=val)
+
+    def decr(self, command, json_req):
+        by = json_req.get('by', 1)
+        val = self.r.decr(json_req['key'], by)
+        return self.ok(result=val)
+
+    def append(self, command, json_req):
+        val = self.r.append(json_req['key'], json_req['value'])
+        return self.ok(result=val)
+
+    def getset(self, command, json_req):
+        val = self.r.getset(json_req['key'], json_req['value'])
+        return self.ok(result=val)
 
     def push_generic(self, command, json_req):
         """
@@ -88,7 +126,7 @@ class Handler:
             else:
                 return self.ok(val)
         else:
-            return self.ok(null=True)
+            return self.ok()
 
     def delete(self, command, json_req):
         """
@@ -131,6 +169,9 @@ class Handler:
         self.listeners[sub_id] = t
         return 'ok\n'
 
+    def health(self):
+        return 'OK'
+
 
 class RedisOnDemand:
 
@@ -154,6 +195,11 @@ class RedisOnDemand:
         os.kill(os.getpid(), signal.SIGINT)
 
 
+def app_error(e):
+    logger.warn(traceback.format_exc())
+    return jsonify({'message': repr(e)}), 400
+
+
 if __name__ == '__main__':
     # Do we have creds to connect to? If not, let's spawn a redis server
     # at this point. Why do we spawn it here rather than outside? Because if
@@ -175,4 +221,8 @@ if __name__ == '__main__':
                              'listener', handler.listener, methods=['post'])
     handler.app.add_url_rule('/<string:command>', 'execute', handler.execute,
                              methods=['post'])
+
+    handler.app.add_url_rule('/health', 'health', handler.health,
+                             methods=['get'])
+    handler.app.register_error_handler(Exception, app_error)
     handler.app.run(host='0.0.0.0', port=8000)
