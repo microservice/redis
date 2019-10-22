@@ -124,7 +124,7 @@ actions:
         in: requestBody
         type: any
     output:
-      type: string
+      type: int
   decrement:
     help: Decrements a number stored at 'key'.
     http:
@@ -137,7 +137,7 @@ actions:
         in: requestBody
         type: any
     output:
-      type: string
+      type: int
   append:
     <<: *key_value_required
     help: Appends 'value' to a 'key'.
