@@ -111,7 +111,7 @@ actions:
         in: requestBody
         type: list
     output:
-      type: lisy
+      type: list
   increment:
     help: Increments a number stored at 'key'.
     http:
