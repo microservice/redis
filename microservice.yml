@@ -122,7 +122,7 @@ actions:
         <<: *key
       by:
         in: requestBody
-        type: any
+        type: int
     output:
       type: int
   decrement:
@@ -135,7 +135,7 @@ actions:
         <<: *key
       by:
         in: requestBody
-        type: any
+        type: int
     output:
       type: int
   append:
