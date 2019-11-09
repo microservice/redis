@@ -1,12 +1,14 @@
-# _Redis_ OMG Microservice
+# _Redis_ OMS Microservice
 
-[![Open Microservice Guide](https://img.shields.io/badge/OMG%20Enabled-👍-green.svg?)](https://microservice.guide)
+[![Open Microservice Guide](https://img.shields.io/badge/OMS%20Enabled-👍-green.svg?)](https://microservice.guide)
 
-This container should be used for connecting to a hosted Redis server. It does not come bundled with its own Redis server.
+This container should be used for connecting to a hosted Redis server. It does
+not come bundled with its own Redis server.
 
 ## Direct usage in [Storyscript](https://storyscript.io/):
 
 #### Redis Example
+
 ```coffee
 # Storyscript
 value = redis set key: "hello" value: "world"
@@ -27,58 +29,83 @@ Curious to [learn more](https://docs.storyscript.io/)?
 
 ✨🍰✨
 
-## Usage with [OMG CLI](https://www.npmjs.com/package/omg)
+## Usage with [OMS CLI](https://www.npmjs.com/package/@microservices/oms)
 
 ##### Set
+
 ```shell
-$ omg run set -a key=<KEY> -a value=<VALUE> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms run set -a key=<KEY> -a value=<VALUE> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
+
 ##### RPush
+
 ```shell
-$ omg run rpush -a key=<KEY> -a value=<VALUE> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms run rpush -a key=<KEY> -a value=<VALUE> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
+
 ##### LPush
+
 ```shell
-$ omg run lpush -a key=<KEY> -a value=<VALUE> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms run lpush -a key=<KEY> -a value=<VALUE> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
+
 ##### RPop
+
 ```shell
-$ omg run rpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms run rpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
+
 ##### LPop
+
 ```shell
-$ omg run lpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms run lpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
+
 ##### BRPop
+
 ```shell
-$ omg run brpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms run brpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
+
 ##### BLPop
+
 ```shell
-$ omg run blpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms run blpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
+
 ##### Delete
+
 ```shell
-$ omg run del -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms run del -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
+
 ##### Get
+
 ```shell
-$ omg run get -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms run get -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
+
 ##### Expire
+
 ```shell
-$ omg run expire -a key=<KEY> -a seconds=<SECONDS> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms run expire -a key=<KEY> -a seconds=<SECONDS> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
+
 ##### Listener RPop
+
 ```shell
-$ omg subscribe listener rpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms subscribe listener rpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
+
 ##### Listener LPop
+
 ```shell
-$ omg subscribe listener lpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
+$ oms subscribe listener lpop -a key=<KEY> -e REDIS_HOST=<REDIS_HOST> -e REDIS_PORT=<REDIS_PORT> -e REDIS_DB=<REDIS_DB> -e REDIS_PASSWORD=<REDIS_PASSWORD>
 ```
-**Note**: The OMG CLI requires [Docker](https://docs.docker.com/install/) to be installed.
+
+**Note**: The OMS CLI requires [Docker](https://docs.docker.com/install/) to be
+installed.
 
 ## License
-[MIT License](https://github.com/omg-services/redis/blob/master/LICENSE).
 
+[MIT License](https://github.com/oms-services/redis/blob/master/LICENSE).

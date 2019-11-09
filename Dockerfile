@@ -7,7 +7,7 @@ RUN         mkdir /db
 ADD         requirements.txt /app
 RUN         pip install -r /app/requirements.txt
 ADD         start.sh /app
-ADD         omg /app/omg
+ADD         oms /app/oms
 ADD         redis.conf /app
 
 ENTRYPOINT  ["/bin/sh", "/app/start.sh"]

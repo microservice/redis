@@ -1,7 +1,7 @@
-omg: 1
+oms: 1
 lifecycle:
   startup:
-    command: ["/bin/sh", "/app/start.sh"]
+    command: ['/bin/sh', '/app/start.sh']
 info:
   version: 1.0.1
   title: Redis
