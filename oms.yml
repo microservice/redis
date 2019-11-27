@@ -1,11 +1,17 @@
 oms: 1
-lifecycle:
-  startup:
-    command: ['/bin/sh', '/app/start.sh']
 info:
   version: 1.0.1
   title: Redis
-  description: This is a redis service
+  description: Wrapper for the Redis key-value store
+  contact:
+    name: Open Microservices
+    url: 'https://openmicroservices.org'
+    email: core@openmicroservices.org
+lifecycle:
+  startup:
+    command:
+      - /bin/sh
+      - /app/start.sh
 volumes:
   db:
     target: /db
