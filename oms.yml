@@ -1,11 +1,17 @@
 oms: 1
-lifecycle:
-  startup:
-    command: ['/bin/sh', '/app/start.sh']
 info:
   version: 1.0.1
   title: Redis
   description: This is a redis service
+  contact:
+    name: Open Microservices
+    url: 'https://openmicroservices.org'
+    email: core@openmicroservices.org
+lifecycle:
+  startup:
+    command:
+      - /bin/sh
+      - /app/start.sh
 volumes:
   db:
     target: /db
@@ -15,97 +21,119 @@ health:
     path: /health
     port: 8000
 actions:
-  set: &key_value_required
+  set:
     help: Sets 'key' to hold 'value'.
-    http: &http
+    http:
       path: /set
       port: 8000
       method: post
       contentType: application/json
-    arguments:
-      key: &key
+    arguments: &ref_0
+      key:
         type: string
         in: requestBody
         required: true
-      value: &value
+      value:
         type: any
         in: requestBody
         required: true
-    output:
+    output: &ref_1
       type: none
   rpush:
-    <<: *key_value_required
     help: Insert 'value' at the end of list stored at 'key'.
     http:
-      <<: *http
       path: /rpush
+      port: 8000
+      method: post
+      contentType: application/json
+    arguments: *ref_0
+    output: *ref_1
   lpush:
-    <<: *key_value_required
     help: Insert 'value' at the head of list stored at 'key'.
     http:
-      <<: *http
       path: /lpush
-  lpop: &key_required
+      port: 8000
+      method: post
+      contentType: application/json
+    arguments: *ref_0
+    output: *ref_1
+  lpop:
     help: Removes and returns the first element of the list stored at 'key'.
     http:
-      <<: *http
       path: /lpop
-    arguments:
+      port: 8000
+      method: post
+      contentType: application/json
+    arguments: &ref_2
       key:
-        <<: *key
+        type: string
+        in: requestBody
+        required: true
     output:
       type: any
   rpop:
-    <<: *key_required
     help: Removes and returns the last element of the list stored at 'key'.
     http:
-      <<: *http
       path: /rpop
+      port: 8000
+      method: post
+      contentType: application/json
+    arguments: *ref_2
     output:
       type: any
   blpop:
-    <<: *key_required
     help: |
       Removes and returns the first element of the list stored at 'key'.
       When there are no element in the list, the command will not return
       until an element got added.
     http:
-      <<: *http
       path: /blpop
+      port: 8000
+      method: post
+      contentType: application/json
+    arguments: *ref_2
     output:
       type: any
   brpop:
-    <<: *key_required
     help: |
       Removes and returns the last element of the list stored at 'key'.
       When there are no element in the list, the command will not return
       until an elements got added.
     http:
-      <<: *http
       path: /brpop
+      port: 8000
+      method: post
+      contentType: application/json
+    arguments: *ref_2
     output:
       type: any
   delete:
-    <<: *key_required
     help: Removes 'key'.
     http:
-      <<: *http
       path: /del
+      port: 8000
+      method: post
+      contentType: application/json
+    arguments: *ref_2
     output:
       type: none
   get:
-    <<: *key_required
     help: Returns the value of 'key'.
     http:
-      <<: *http
       path: /get
+      port: 8000
+      method: post
+      contentType: application/json
+    arguments: *ref_2
     output:
       type: string
   mget:
     help: Returns the values of multiple 'keys'.
     http:
-      <<: *http
       path: /get
+      port: 8000
+      method: post
+      contentType: application/json
     arguments:
       keys:
         in: requestBody
@@ -115,11 +143,15 @@ actions:
   increment:
     help: Increments a number stored at 'key'.
     http:
-      <<: *http
       path: /incr
+      port: 8000
+      method: post
+      contentType: application/json
     arguments:
       key:
-        <<: *key
+        type: string
+        in: requestBody
+        required: true
       by:
         in: requestBody
         type: int
@@ -128,44 +160,56 @@ actions:
   decrement:
     help: Decrements a number stored at 'key'.
     http:
-      <<: *http
       path: /decr
+      port: 8000
+      method: post
+      contentType: application/json
     arguments:
       key:
-        <<: *key
+        type: string
+        in: requestBody
+        required: true
       by:
         in: requestBody
         type: int
     output:
       type: int
   append:
-    <<: *key_value_required
     help: Appends 'value' to a 'key'.
     http:
-      <<: *http
       path: /append
+      port: 8000
+      method: post
+      contentType: application/json
+    arguments: *ref_0
     output:
       type: int
   getSet:
-    <<: *key_value_required
-    http:
-      <<: *http
-      path: /getset
     help: Returns the current value of 'key' and overwrites it with 'value'.
+    http:
+      path: /getset
+      port: 8000
+      method: post
+      contentType: application/json
+    arguments: *ref_0
     output:
       type: string
   setnx:
-    <<: *key_value_required
-    http:
-      <<: *http
-      path: /setnx
     help: Set a 'key' to 'value' only if the key does not exist yet.
+    http:
+      path: /setnx
+      port: 8000
+      method: post
+      contentType: application/json
+    arguments: *ref_0
     output:
       type: boolean
   mset:
     http:
-      <<: *http
       path: /mset
+      port: 8000
+      method: post
+      contentType: application/json
     help: Sets multiple 'key'/'value' pairs simultaneously.
     arguments:
       pairs:
@@ -175,8 +219,10 @@ actions:
       type: none
   msetnx:
     http:
-      <<: *http
       path: /msetnx
+      port: 8000
+      method: post
+      contentType: application/json
     help: |
       Sets multiple 'key'/'value' pairs simultaneously.
       Only non-existing keys will be set.
@@ -188,12 +234,16 @@ actions:
       type: boolean
   expire:
     http:
-      <<: *http
       path: /expire
+      port: 8000
+      method: post
+      contentType: application/json
     help: Set a timeout on a 'key'.
     arguments:
       key:
-        <<: *key
+        type: string
+        in: requestBody
+        required: true
       seconds:
         in: requestBody
         type: int
@@ -203,13 +253,13 @@ actions:
   listener:
     events:
       rpop:
-        help: RPOP a key constantly, and emit the values as events
-        http: &rpop_http
+        help: 'RPOP a key constantly, and emit the values as events'
+        http:
           port: 8000
-          subscribe:
+          subscribe: &ref_3
             path: /listener/add
             method: post
-          unsubscribe:
+          unsubscribe: &ref_4
             path: /listener/remove
             method: post
         arguments:
@@ -221,9 +271,11 @@ actions:
         output:
           type: any
       lpop:
-        help: LPOP a key constantly, and emit the values as events
+        help: 'LPOP a key constantly, and emit the values as events'
         http:
-          <<: *rpop_http
+          port: 8000
+          subscribe: *ref_3
+          unsubscribe: *ref_4
         arguments:
           key:
             type: string
@@ -232,7 +284,6 @@ actions:
             help: The key to LPOP
         output:
           type: any
-
 environment:
   REDIS_HOST:
     type: string
